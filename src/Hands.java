@@ -1,9 +1,8 @@
-import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Hands {
     private final int n;
-    private Boolean[][] table;
+    private final Boolean[][] table;
     private final int[] numChecks;
     private final int[] numXs;
     private final int[] numEmpty;

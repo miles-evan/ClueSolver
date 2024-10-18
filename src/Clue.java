@@ -23,30 +23,30 @@ public class Clue {
     }
 
 
-    public void addInfo(int player, int weapon, int suspect, int room, int numTries) {
+    public void addInfo(int player, int suspect, int weapon, int room, int numTries) {
         for(int i = 1; i < (numTries == -1? n : numTries); i ++) {
-            hands.setX((player + i) % n, weapon);
             hands.setX((player + i) % n, suspect);
+            hands.setX((player + i) % n, weapon);
             hands.setX((player + i) % n, room);
-            primitiveTable.setX((player + i) % n, weapon);
             primitiveTable.setX((player + i) % n, suspect);
+            primitiveTable.setX((player + i) % n, weapon);
             primitiveTable.setX((player + i) % n, room);
         }
         if(numTries == -1) return;
-        logic[(player + numTries) % n].add(weapon);
         logic[(player + numTries) % n].add(suspect);
+        logic[(player + numTries) % n].add(weapon);
         logic[(player + numTries) % n].add(room);
         numLogicVars += 3;
         update();
     }
 
-    public void addInfo(int player, int weapon, int suspect, int room, int numTries, int cardHandedOver) {
+    public void addInfo(int player, int suspect, int weapon, int room, int numTries, int cardHandedOver) {
         for(int i = 1; i < numTries; i ++) {
-            hands.setX((player + i) % n, weapon);
             hands.setX((player + i) % n, suspect);
+            hands.setX((player + i) % n, weapon);
             hands.setX((player + i) % n, room);
-            primitiveTable.setX((player + i) % n, weapon);
             primitiveTable.setX((player + i) % n, suspect);
+            primitiveTable.setX((player + i) % n, weapon);
             primitiveTable.setX((player + i) % n, room);
         }
         hands.setCheck((player + numTries) % n, cardHandedOver);
