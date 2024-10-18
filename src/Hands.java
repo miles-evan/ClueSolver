@@ -71,7 +71,7 @@ public class Hands {
         boolean valid = true;
         if(numXs[player] + handSizes[player] == 21) {
             for(int i = 0; i < 21; i ++) {
-                if(table[player][i] == null && !setCheck(player, i)) { //will this ever run?
+                if(table[player][i] == null && !setCheck(player, i)) { //will this ever run? also should i switch the && order?
                     valid = false;
                 }
                 if(numXs[player] + handSizes[player] > 21) {
@@ -82,24 +82,8 @@ public class Hands {
         return valid;
     }
 
-
-    public int getN() {
-        return n;
-    }
     public Boolean getTableEntry(int player, int card) {
         return table[player][card];
-    }
-    public int getNumChecks(int i) {
-        return numChecks[i];
-    }
-    public int getNumXs(int i) {
-        return numXs[i];
-    }
-    public int getNumEmpty(int i) {
-        return numEmpty[i];
-    }
-    public int getHandSize(int i) {
-        return handSizes[i];
     }
 
     public String difference(Hands other) {
@@ -139,5 +123,4 @@ public class Hands {
         result.delete(result.length() - 2, result.length());
         return result.toString();
     }
-
 }
