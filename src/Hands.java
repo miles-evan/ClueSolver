@@ -5,7 +5,6 @@ public class Hands {
     private final Boolean[][] table;
     private final int[] numChecks;
     private final int[] numXs;
-    private final int[] numEmpty;
     private final int[] handSizes;
 
     public Hands() {
@@ -16,10 +15,6 @@ public class Hands {
         table = new Boolean[n][21];
         numChecks = new int[n];
         numXs = new int[n];
-        numEmpty = new int[n];
-        for(int i = 0; i < n; i ++) {
-            numEmpty[i] = 21;
-        }
         this.handSizes = handSizes;
     }
     public Hands(Hands other) {
@@ -30,7 +25,6 @@ public class Hands {
         }
         numChecks = Arrays.copyOf(other.numChecks, other.n);
         numXs = Arrays.copyOf(other.numXs, other.n);
-        numEmpty = Arrays.copyOf(other.numEmpty, other.n);
         handSizes = Arrays.copyOf(other.handSizes, other.n);
     }
 
@@ -49,7 +43,6 @@ public class Hands {
         }
         table[player][card] = true;
         numChecks[player] ++;
-        numEmpty[player] --;
         for(int i = 0; i < n; i ++) {
             setX(i, card);
         }
@@ -67,7 +60,6 @@ public class Hands {
         }
         table[player][card] = false;
         numXs[player] ++;
-        numEmpty[player] --;
         boolean valid = true;
         if(numXs[player] + handSizes[player] == 21) {
             for(int i = 0; i < 21; i ++) {
