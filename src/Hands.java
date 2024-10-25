@@ -6,26 +6,31 @@ public class Hands {
     private final int[] numChecks;
     private final int[] numXs;
     private final int[] handSizes;
+    private final int[] numAnswerTypeXs = new int[3];
+    private final int[] numXsInCol = new int[21];
+    private final boolean[] colHasCheck = new boolean[21];
 
     public Hands() {
         this(6, 3, 3, 3, 3, 3, 3);
     }
     public Hands(int n, int ... handSizes) {
         this.n = n;
-        table = new Boolean[n][21];
-        numChecks = new int[n];
-        numXs = new int[n];
-        this.handSizes = handSizes;
+        table = new Boolean[n+1][21];
+        numChecks = new int[n+1];
+        numXs = new int[n+1];
+        this.handSizes = new int[n+1];
+        System.arraycopy(handSizes, 0, this.handSizes, 0, n);
+        this.handSizes[n] = 3;
     }
     public Hands(Hands other) {
         n = other.n;
-        table = new Boolean[n][21];
-        for(int i = 0; i < n; i ++) {
+        table = new Boolean[n+1][21];
+        for(int i = 0; i < n+1; i ++) {
             table[i] = Arrays.copyOf(other.table[i], 21);
         }
-        numChecks = Arrays.copyOf(other.numChecks, other.n);
-        numXs = Arrays.copyOf(other.numXs, other.n);
-        handSizes = Arrays.copyOf(other.handSizes, other.n);
+        numChecks = Arrays.copyOf(other.numChecks, other.n+1);
+        numXs = Arrays.copyOf(other.numXs, other.n+1);
+        handSizes = Arrays.copyOf(other.handSizes, other.n+1);
     }
 
     public boolean setValue(int player, int card, boolean value) {
@@ -36,19 +41,28 @@ public class Hands {
         }
     }
     public boolean setCheck(int player, int card) {
-        if(table[player][card] != null) {
+        if(table[player][card] != null) { //if there's already something there
             return table[player][card];
-        } else if(numChecks[player] >= handSizes[player]) { //will this ever run? (i don't think so)
+        } else if(numChecks[player] >= handSizes[player]) { //if the hand is full
+            return false;
+        } else if(colHasCheck[card]) { //if someone already has this card
             return false;
         }
         table[player][card] = true;
         numChecks[player] ++;
-        for(int i = 0; i < n; i ++) {
-            setX(i, card);
+        colHasCheck[card] = true;
+        for(int i = 0; i < n+1; i ++) { //put Xs in the column
+            if(table[i][card] == null && !setX(i, card)) return false;
         }
-        if(numChecks[player] == handSizes[player]) {
+        if(numChecks[player] == handSizes[player]) { //if hand full, put Xs in the row
             for(int i = 0; i < 21; i ++) {
-                setX(player, i); //does this work? i haven't tested it yet
+                if(table[player][i] == null && !setX(player, i)) return false;
+            }
+        }
+        if(player == n) { //if adding a check to the answer hand, put Xs in the rest of that card type
+            int[] interval = getTypeInterval(card);
+            for(int i = interval[0]; i <= interval[1]; i ++) {
+                if(table[n][i] == null && !setX(n, i)) return false;
             }
         }
         return true;
@@ -60,23 +74,53 @@ public class Hands {
         }
         table[player][card] = false;
         numXs[player] ++;
-        boolean valid = true;
-        if(numXs[player] + handSizes[player] == 21) {
+        numXsInCol[card] ++;
+        if(player == n) numAnswerTypeXs[getType(card)] ++;
+
+        if(numXs[player] + handSizes[player] > 21) { //if too many Xs were added
+            return false;
+        }
+        if(numXs[player] + handSizes[player] == 21) { //if there are enough Xs to where the rest should be checks
             for(int i = 0; i < 21; i ++) {
-                if(table[player][i] == null && !setCheck(player, i)) { //will this ever run? also should i switch the && order?
-                    valid = false;
-                }
-                if(numXs[player] + handSizes[player] > 21) {
-                    valid = false;
-                }
+                if(table[player][i] == null && !setCheck(player, i))
+                    return false;
+                if(numXs[player] + handSizes[player] > 21)
+                    return false;
             }
         }
-        return valid;
+        if(player == n && numAnswerTypeXs[getType(card)] == getSizeOfType(card) - 1) { //if there are enough Xs in the answer type to where the rest should be checks
+            int[] interval = getTypeInterval(card);
+            for(int i = interval[0]; i <= interval[1]; i ++) {
+                setCheck(n, i);
+            }
+        }
+        if(numXsInCol[card] == n && !colHasCheck[card]) { //if only one entry left in the column for the check
+            for(int i = 0; i < n+1; i ++) {
+                setCheck(i, card);
+            }
+        }
+        return true;
+    }
+
+
+    private int getType(int card) {
+        return card < 6? 0 :
+                card < 12? 1 : 0;
+    }
+    private int getSizeOfType(int card) {
+        return card < 12? 6 : 9;
+    }
+    private int[] getTypeInterval(int card) {
+        return card < 6? new int[] {0, 5} :
+                card < 12? new int[] {6, 11} :
+                        new int[] {12, 20};
     }
 
     public Boolean getTableEntry(int player, int card) {
         return table[player][card];
     }
+    public int getN() {return n;}
+    public int[] getHandSizes() {return Arrays.copyOf(handSizes, n);}
 
     public String difference(Hands other) {
         StringBuilder result = new StringBuilder("\t\t");
@@ -84,7 +128,7 @@ public class Hands {
             result.append(i).append("\t");
         }
         result.append("\n     ———————————————————————————————————————————————————————————————————————————————————————\n");
-        for(int i = 0; i < n; i ++) {
+        for(int i = 0; i < n+1; i ++) {
             result.append(i).append("   |\t");
             for(int j = 0; j < table[i].length; j ++) {
                 if(table[i][j] == null && other.table[i][j] != null) {
@@ -105,7 +149,7 @@ public class Hands {
             result.append(i).append("\t");
         }
         result.append("\n     ———————————————————————————————————————————————————————————————————————————————————————\n");
-        for(int i = 0; i < n; i ++) {
+        for(int i = 0; i < n+1; i ++) {
             result.append(i).append("   |\t");
             for(Boolean card : table[i]) {
                 result.append(card == null? "." : card? "✔" : "✘").append("\t");

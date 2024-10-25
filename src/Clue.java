@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Clue {
 
@@ -22,6 +23,15 @@ public class Clue {
         this(6, 3, 3, 3, 3, 3, 3);
     }
 
+    public Clue(Hands hands) {
+        this.n = hands.getN();
+        this.hands = hands;
+        primitiveTable = new Hands(n, hands.getHandSizes());
+        logic = new ArrayList[n];
+        for(int i = 0; i < n; i ++) {
+            logic[i] = new ArrayList<>();
+        }
+    }
 
     public void addInfo(int player, int suspect, int weapon, int room, int numTries) {
         for(int i = 1; i < (numTries == -1? n : numTries); i ++) {
@@ -54,25 +64,19 @@ public class Clue {
         update();
     }
 
-
     public void update() {
         boolean changed = false;
-        for(int player = 0; player < n; player++) {
+        for(int player = 0; player < n+1; player++) {
             for(int card = 0; card < 21; card++) {
-                if(testEntry(player, card)) {
-                    changed = true;
-                }
+                if(testEntry(player, card)) changed = true;
             }
         }
-        if(changed) {
-            update();
-        }
+        if(changed) update();
     }
     public boolean testEntry(int player, int card) {
         if(hands.getTableEntry(player, card) != null) {
             return false;
-        }
-        if(!possible(player, card, true)) {
+        } else if(!possible(player, card, true)) {
             hands.setX(player, card);
             return true;
         } else if(!possible(player, card, false)) {
@@ -93,7 +97,10 @@ public class Clue {
     private boolean possible(Hands currentHands, boolean[] currentTruths, int i, int player, int logicVarSubIndex, boolean value) {
         while(logic[player].isEmpty()) {
             player ++;
-            if(player == n) return true;
+            if(player == n) {
+                return completePossible(currentHands, 0, 0, true) ||
+                        completePossible(currentHands, 0, 0, false); //phase 2
+            }
         }
 
         Hands newHands = new Hands(currentHands);
@@ -102,7 +109,8 @@ public class Clue {
         if(i % 3 == 2 && !(currentTruths[i-2] || currentTruths[i-1] || currentTruths[i])) return false;
 
         if(++i == currentTruths.length) {
-            return true;
+            return completePossible(newHands, 0, 0, true) ||
+                    completePossible(newHands, 0, 0, false); //phase 2
         }
         if(++logicVarSubIndex == logic[player].size()) {
             player ++;
@@ -111,7 +119,52 @@ public class Clue {
         return possible(newHands, currentTruths, i, player, logicVarSubIndex, true) ||
                 possible(newHands, currentTruths, i, player, logicVarSubIndex, false);
     }
+    private boolean completePossible(Hands currentHands, int player, int card, boolean value) {
+        return true;
+        /*
+        if(System.currentTimeMillis() - time > 100) {
+            timeLimitExeeded = true;
+            return true;
+        }
 
+        while(currentHands.getTableEntry(player, card) != null) {
+            if(++card == 21) {
+                card = 0;
+                if(++player == n+1) {
+                    return true;
+                }
+            }
+        }
+
+        Hands newHands = new Hands(currentHands);
+        if(!newHands.setValue(player, card, value)) return false;
+        if(++card == 21) {
+            card = 0;
+            if(++player == n+1) {
+                return true;
+            }
+        }
+        return completePossible(newHands, player, card, true) ||
+                completePossible(newHands, player, card, false);
+         */
+    }
+
+
+
+
+
+    public void setValue(int player, int card, boolean value) {
+        hands.setValue(player, card, value);
+        primitiveTable.setValue(player, card, value);
+    }
+    public void setCheck(int player, int card) {
+        hands.setCheck(player, card);
+        primitiveTable.setCheck(player, card);
+    }
+    public void setX(int player, int card) {
+        hands.setX(player, card);
+        primitiveTable.setX(player, card);
+    }
 
 
     public void printTable() {

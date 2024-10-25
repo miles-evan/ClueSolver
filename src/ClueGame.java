@@ -40,7 +40,8 @@ public class ClueGame {
         System.out.println("Player# cardsInHand...");
         String[] playersCards = in.nextLine().split(" ");
         for(int i = 1; i < playersCards.length; i ++) {
-            clue.addInfo(Integer.parseInt(playersCards[0]), 0, 0, 0, 0, Integer.parseInt(playersCards[i]));
+            clue.setCheck(Integer.parseInt(playersCards[0]), Integer.parseInt(playersCards[i]));
+            //clue.addInfo(Integer.parseInt(playersCards[0]), 0, 0, 0, 0, Integer.parseInt(playersCards[i]));
         }
 
         while(true) {
