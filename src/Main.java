@@ -2,12 +2,13 @@
 
 public class Main {
     public static void main(String[] args) {
-        Clue clue = new Clue();
-        clue.setCheck(2, 1);
-        clue.setCheck(2, 7);
-        clue.addInfo(1, 0, 6, 12, 1);
-
-        clue.print();
+        Hands hands = new Hands();
+        for(int i = 0; i < 17; i ++) {
+            System.out.println(hands.setX(1, i));
+            System.out.println(hands.setX(2, i));
+        }
+        System.out.println(hands.setX(1, 17));
+        System.out.println(hands);
 
     }
 

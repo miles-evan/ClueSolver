@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Hands {
@@ -40,33 +41,36 @@ public class Hands {
             return setX(player, card);
         }
     }
+
     public boolean setCheck(int player, int card) {
         if(table[player][card] != null) { //if there's already something there
             return table[player][card];
-        } else if(numChecks[player] >= handSizes[player]) { //if the hand is full
-            return false;
-        } else if(colHasCheck[card]) { //if someone already has this card
-            return false;
         }
         table[player][card] = true;
         numChecks[player] ++;
         colHasCheck[card] = true;
+
+        ArrayList<int[]> scheduledXs = new ArrayList<>();
         for(int i = 0; i < n+1; i ++) { //put Xs in the column
-            if(table[i][card] == null && !setX(i, card)) return false;
-        }
-        if(numChecks[player] == handSizes[player]) { //if hand full, put Xs in the row
-            for(int i = 0; i < 21; i ++) {
-                if(table[player][i] == null && !setX(player, i)) return false;
-            }
+            if(table[i][card] == null) scheduledXs.add(new int[]{i, card});
         }
         if(player == n) { //if adding a check to the answer hand, put Xs in the rest of that card type
             int[] interval = getTypeInterval(card);
             for(int i = interval[0]; i <= interval[1]; i ++) {
-                if(table[n][i] == null && !setX(n, i)) return false;
+                if(table[n][i] == null) scheduledXs.add(new int[]{n, i});
             }
+        } else if(numChecks[player] == handSizes[player]) { //if hand full, put Xs in the row
+            for(int i = 0; i < 21; i ++) {
+                if(table[player][i] == null) scheduledXs.add(new int[]{player, i});
+            }
+        }
+
+        for(int[] x : scheduledXs) { // X all scheduled entries
+            if(!setX(x[0], x[1])) return false;
         }
         return true;
     }
+
 
     public boolean setX(int player, int card) {
         if(table[player][card] != null) {
@@ -77,27 +81,26 @@ public class Hands {
         numXsInCol[card] ++;
         if(player == n) numAnswerTypeXs[getType(card)] ++;
 
-        if(numXs[player] + handSizes[player] > 21) { //if too many Xs were added
-            return false;
-        }
-        if(numXs[player] + handSizes[player] == 21) { //if there are enough Xs to where the rest should be checks
+        ArrayList<int[]> scheduledChecks = new ArrayList<>();
+        if(player != n && numXs[player] + handSizes[player] == 21) { //if there are enough Xs to where the rest should be checks
             for(int i = 0; i < 21; i ++) {
-                if(table[player][i] == null && !setCheck(player, i))
-                    return false;
-                if(numXs[player] + handSizes[player] > 21)
-                    return false;
+                if(table[player][i] == null) scheduledChecks.add(new int[]{player, i});
             }
         }
         if(player == n && numAnswerTypeXs[getType(card)] == getSizeOfType(card) - 1) { //if there are enough Xs in the answer type to where the rest should be checks
             int[] interval = getTypeInterval(card);
             for(int i = interval[0]; i <= interval[1]; i ++) {
-                setCheck(n, i);
+                if(table[n][i] == null) scheduledChecks.add(new int[]{n, i});
             }
         }
         if(numXsInCol[card] == n && !colHasCheck[card]) { //if only one entry left in the column for the check
             for(int i = 0; i < n+1; i ++) {
-                setCheck(i, card);
+                if(table[i][card] == null) scheduledChecks.add(new int[]{i, card});
             }
+        }
+
+        for(int[] check : scheduledChecks) { // Check all scheduled entries
+            if(!setCheck(check[0], check[1])) return false;
         }
         return true;
     }

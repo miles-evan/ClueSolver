@@ -35,12 +35,9 @@ public class Clue {
 
     public void addInfo(int player, int suspect, int weapon, int room, int numTries) {
         for(int i = 1; i < (numTries == -1? n : numTries); i ++) {
-            hands.setX((player + i) % n, suspect);
-            hands.setX((player + i) % n, weapon);
-            hands.setX((player + i) % n, room);
-            primitiveTable.setX((player + i) % n, suspect);
-            primitiveTable.setX((player + i) % n, weapon);
-            primitiveTable.setX((player + i) % n, room);
+            setX((player + i) % n, suspect);
+            setX((player + i) % n, weapon);
+            setX((player + i) % n, room);
         }
         if(numTries == -1) return;
         logic[(player + numTries) % n].add(suspect);
@@ -52,15 +49,11 @@ public class Clue {
 
     public void addInfo(int player, int suspect, int weapon, int room, int numTries, int cardHandedOver) {
         for(int i = 1; i < numTries; i ++) {
-            hands.setX((player + i) % n, suspect);
-            hands.setX((player + i) % n, weapon);
-            hands.setX((player + i) % n, room);
-            primitiveTable.setX((player + i) % n, suspect);
-            primitiveTable.setX((player + i) % n, weapon);
-            primitiveTable.setX((player + i) % n, room);
+            setX((player + i) % n, suspect);
+            setX((player + i) % n, weapon);
+            setX((player + i) % n, room);
         }
-        hands.setCheck((player + numTries) % n, cardHandedOver);
-        primitiveTable.setCheck((player + numTries) % n, cardHandedOver);
+        setCheck((player + numTries) % n, cardHandedOver);
         update();
     }
 
@@ -73,7 +66,7 @@ public class Clue {
         }
         if(changed) update();
     }
-    public boolean testEntry(int player, int card) {
+    private boolean testEntry(int player, int card) {
         if(hands.getTableEntry(player, card) != null) {
             return false;
         } else if(!possible(player, card, true)) {
