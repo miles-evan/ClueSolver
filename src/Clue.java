@@ -8,6 +8,7 @@ public class Clue {
     private final Hands primitiveTable;
     private final ArrayList<Integer>[] logic;
     private int numLogicVars = 0;
+    private final ArrayList<Integer> accusationLogic;
 
 
     public Clue(int n, int ... handSizes) {
@@ -18,19 +19,10 @@ public class Clue {
         for(int i = 0; i < n; i ++) {
             logic[i] = new ArrayList<>();
         }
+        accusationLogic = new ArrayList<>();
     }
     public Clue() {
         this(6, 3, 3, 3, 3, 3, 3);
-    }
-
-    public Clue(Hands hands) {
-        this.n = hands.getN();
-        this.hands = hands;
-        primitiveTable = new Hands(n, hands.getHandSizes());
-        logic = new ArrayList[n];
-        for(int i = 0; i < n; i ++) {
-            logic[i] = new ArrayList<>();
-        }
     }
 
     public void addInfo(int player, int suspect, int weapon, int room, int numTries) {
@@ -54,6 +46,13 @@ public class Clue {
             setX((player + i) % n, room);
         }
         setCheck((player + numTries) % n, cardHandedOver);
+        update();
+    }
+
+    public void incorrectAccusation(int suspect, int weapon, int room) {
+        accusationLogic.add(suspect);
+        accusationLogic.add(weapon);
+        accusationLogic.add(room);
         update();
     }
 
@@ -90,10 +89,7 @@ public class Clue {
     private boolean possible(Hands currentHands, boolean[] currentTruths, int i, int player, int logicVarSubIndex, boolean value) {
         while(logic[player].isEmpty()) {
             player ++;
-            if(player == n) {
-                return completePossible(currentHands, 0, 0, true) ||
-                        completePossible(currentHands, 0, 0, false); //phase 2
-            }
+            if(player == n) return accusationPossible(currentHands);
         }
 
         Hands newHands = new Hands(currentHands);
@@ -101,10 +97,7 @@ public class Clue {
         currentTruths[i] = value;
         if(i % 3 == 2 && !(currentTruths[i-2] || currentTruths[i-1] || currentTruths[i])) return false;
 
-        if(++i == currentTruths.length) {
-            return completePossible(newHands, 0, 0, true) ||
-                    completePossible(newHands, 0, 0, false); //phase 2
-        }
+        if(++i == currentTruths.length) return accusationPossible(newHands);
         if(++logicVarSubIndex == logic[player].size()) {
             player ++;
             logicVarSubIndex = 0;
@@ -112,13 +105,33 @@ public class Clue {
         return possible(newHands, currentTruths, i, player, logicVarSubIndex, true) ||
                 possible(newHands, currentTruths, i, player, logicVarSubIndex, false);
     }
+
+    private boolean accusationPossible(Hands currentHands) {
+        return accusationPossible(currentHands, 0, false) ||
+                accusationPossible(currentHands, 0, true);
+    }
+    private boolean accusationPossible(Hands currentHands, int i, boolean value) {
+        if(i == accusationLogic.size()) return true;
+        Hands newHands = new Hands(currentHands);
+        if(!newHands.setValue(n, accusationLogic.get(i), value)) return false;
+        if(i % 3 == 2 && newHands.getTableEntry(n, accusationLogic.get(i)) &&
+                newHands.getTableEntry(n, accusationLogic.get(i - 1)) &&
+                newHands.getTableEntry(n, accusationLogic.get(i - 2))) return false;
+        return accusationPossible(newHands, i + 1, false) ||
+                accusationPossible(newHands, i + 1, true);
+    }
+
+    private boolean completePossible(Hands currentHands) {
+        return completePossible(currentHands, 0, 0, true) ||
+                completePossible(currentHands, 0, 0, false);
+    }
     private boolean completePossible(Hands currentHands, int player, int card, boolean value) {
-        return true;
         /*
         if(System.currentTimeMillis() - time > 100) {
-            timeLimitExeeded = true;
+            timeLimitExceeded = true;
             return true;
         }
+        */
 
         while(currentHands.getTableEntry(player, card) != null) {
             if(++card == 21) {
@@ -139,7 +152,6 @@ public class Clue {
         }
         return completePossible(newHands, player, card, true) ||
                 completePossible(newHands, player, card, false);
-         */
     }
 
 
@@ -172,6 +184,11 @@ public class Clue {
             }
             System.out.println();
         }
+        System.out.print("Accusations: ");
+        for(int i = 0; i < accusationLogic.size(); i += 3) {
+            System.out.print("(" + accusationLogic.get(i++) + " " + accusationLogic.get(i++) + " " + accusationLogic.get(i++) + ") ");
+        }
+        System.out.println();
     }
 
     public void print() {
