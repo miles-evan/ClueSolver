@@ -6,20 +6,14 @@ public class Clue {
     private final int n;
     private final Hands hands;
     private final Hands primitiveTable;
-    private final ArrayList<Integer>[] logic;
-    private int numLogicVars = 0;
-    private final ArrayList<Integer> accusationLogic;
+    private final ClueLogic logic;
 
 
     public Clue(int n, int ... handSizes) {
         this.n = n;
         hands = new Hands(n, handSizes);
         primitiveTable = new Hands(n, handSizes);
-        logic = new ArrayList[n];
-        for(int i = 0; i < n; i ++) {
-            logic[i] = new ArrayList<>();
-        }
-        accusationLogic = new ArrayList<>();
+        logic = new ClueLogic(n);
     }
     public Clue() {
         this(6, 3, 3, 3, 3, 3, 3);
@@ -32,10 +26,7 @@ public class Clue {
             setX((player + i) % n, room);
         }
         if(numTries == -1) return;
-        logic[(player + numTries) % n].add(suspect);
-        logic[(player + numTries) % n].add(weapon);
-        logic[(player + numTries) % n].add(room);
-        numLogicVars += 3;
+        logic.add((player + numTries) % n, suspect, weapon, room);
         update();
     }
 
@@ -50,9 +41,7 @@ public class Clue {
     }
 
     public void incorrectAccusation(int suspect, int weapon, int room) {
-        accusationLogic.add(suspect);
-        accusationLogic.add(weapon);
-        accusationLogic.add(room);
+        logic.addAccusation(suspect, weapon, room);
         update();
     }
 
@@ -83,42 +72,36 @@ public class Clue {
         return possible(newHands);
     }
     private boolean possible(Hands currentHands) {
-        return possible(currentHands, new boolean[numLogicVars], 0, 0, 0, false) ||
-                possible(currentHands, new boolean[numLogicVars], 0, 0, 0, true);
+        return possible(currentHands, new boolean[logic.size()], 0, false) ||
+                possible(currentHands, new boolean[logic.size()], 0, true);
     }
-    private boolean possible(Hands currentHands, boolean[] currentTruths, int i, int player, int logicVarSubIndex, boolean value) {
-        while(logic[player].isEmpty()) {
-            player ++;
-            if(player == n) return accusationPossible(currentHands);
-        }
+    private boolean possible(Hands currentHands, boolean[] currentTruths, int index, boolean value) {
+        if(index == logic.size()) return accusationPossible(currentHands);
 
         Hands newHands = new Hands(currentHands);
-        if(!newHands.setValue(player, logic[player].get(logicVarSubIndex), value)) return false;
-        currentTruths[i] = value;
-        if(i % 3 == 2 && !(currentTruths[i-2] || currentTruths[i-1] || currentTruths[i])) return false;
+        if(!newHands.setValue(logic.getPlayer(index), logic.getCard(index), value)) return false;
+        currentTruths[index] = value;
+        if(index % 3 == 2 && !(currentTruths[index-2] || currentTruths[index-1] || currentTruths[index])) return false;
 
-        if(++i == currentTruths.length) return accusationPossible(newHands);
-        if(++logicVarSubIndex == logic[player].size()) {
-            player ++;
-            logicVarSubIndex = 0;
-        }
-        return possible(newHands, currentTruths, i, player, logicVarSubIndex, true) ||
-                possible(newHands, currentTruths, i, player, logicVarSubIndex, false);
+        return possible(newHands, currentTruths, index + 1, true) ||
+                possible(newHands, currentTruths, index + 1, false);
     }
 
     private boolean accusationPossible(Hands currentHands) {
         return accusationPossible(currentHands, 0, false) ||
                 accusationPossible(currentHands, 0, true);
     }
-    private boolean accusationPossible(Hands currentHands, int i, boolean value) {
-        if(i == accusationLogic.size()) return true;
+    private boolean accusationPossible(Hands currentHands, int index, boolean value) {
+        if(index == logic.accusationSize()) return true;
+
         Hands newHands = new Hands(currentHands);
-        if(!newHands.setValue(n, accusationLogic.get(i), value)) return false;
-        if(i % 3 == 2 && newHands.getTableEntry(n, accusationLogic.get(i)) &&
-                newHands.getTableEntry(n, accusationLogic.get(i - 1)) &&
-                newHands.getTableEntry(n, accusationLogic.get(i - 2))) return false;
-        return accusationPossible(newHands, i + 1, false) ||
-                accusationPossible(newHands, i + 1, true);
+        if(!newHands.setValue(n, logic.getAccusation(index), value)) return false;
+        if(index % 3 == 2 && newHands.getTableEntry(n, logic.getAccusation(index)) &&
+                newHands.getTableEntry(n, logic.getAccusation(index - 1)) &&
+                newHands.getTableEntry(n, logic.getAccusation(index - 2))) return false;
+
+        return accusationPossible(newHands, index + 1, false) ||
+                accusationPossible(newHands, index + 1, true);
     }
 
     private boolean completePossible(Hands currentHands) {
@@ -176,23 +159,8 @@ public class Clue {
         System.out.println(hands);
     }
 
-    public void printLogic() {
-        for(int i = 0; i < n; i ++) {
-            System.out.print("Player " + i + ": ");
-            for(int j = 0; j < logic[i].size();) {
-                System.out.print("(" + logic[i].get(j++) + " " + logic[i].get(j++) + " " + logic[i].get(j++) + ") ");
-            }
-            System.out.println();
-        }
-        System.out.print("Accusations: ");
-        for(int i = 0; i < accusationLogic.size(); i += 3) {
-            System.out.print("(" + accusationLogic.get(i++) + " " + accusationLogic.get(i++) + " " + accusationLogic.get(i++) + ") ");
-        }
-        System.out.println();
-    }
-
     public void print() {
-        printLogic();
+        logic.print();
         printTable();
     }
 
