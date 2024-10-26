@@ -32,6 +32,12 @@ public class ClueLogic {
     }
 
 
+    public int size() {
+        return numLogicVars;
+    }
+    public int accusationSize() {
+        return accusationLogic.size();
+    }
     public int getPlayer(int index) {
         return get(0, index)[0];
     }
