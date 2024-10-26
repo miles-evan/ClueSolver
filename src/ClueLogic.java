@@ -32,14 +32,16 @@ public class ClueLogic {
     }
 
 
-    public int get(int index) {
-        return get(0, index);
+    public int getPlayer(int index) {
+        return get(0, index)[0];
     }
-
-    private int get(int player, int index) {
+    public int getCard(int index) {
+        return get(0, index)[1];
+    }
+    private int[] get(int player, int index) {
         if(index >= logic[player].size())
             return get(player + 1, index - logic[player].size());
-        return logic[player].get(index);
+        return new int[] {player, logic[player].get(index)};
     }
 
     public void print() {
