@@ -1,6 +1,3 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-
 public class Clue {
 
     private final int n;
@@ -71,11 +68,6 @@ public class Clue {
     }
 
 
-
-    public void setValue(int player, int card, boolean value) {
-        hands.setValue(player, card, value);
-        primitiveTable.setValue(player, card, value);
-    }
     public void setCheck(int player, int card) {
         hands.setCheck(player, card);
         primitiveTable.setCheck(player, card);
@@ -89,12 +81,10 @@ public class Clue {
     public void printTable() {
         System.out.println(hands);
     }
-
     public void print() {
         logic.print();
         printTable();
     }
-
     public void printPrimitiveTable() {
         System.out.println(primitiveTable);
     }
