@@ -3,10 +3,14 @@
 public class Main {
     public static void main(String[] args) {
         Clue clue = new Clue();
-        clue.addInfo(0, 0, 6, 12, 2);
-        clue.addInfo(0, 0, 7, 13, 2);
-        clue.addInfo(0, 1, 8, 14, 2);
-        clue.addInfo(0, 2, 9, 15, 2);
+        clue.setTimeLimit(15000);
+        for(int i = 0; i < 15; i++) {
+            clue.setX(0, i);
+            clue.setX(1, i);
+        }
+        clue.setX(0, 15);
+        clue.print();
+        clue.update();
         clue.print();
     }
 

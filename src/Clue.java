@@ -12,7 +12,7 @@ public class Clue {
         hands = new Hands(n, handSizes);
         primitiveTable = new Hands(n, handSizes);
         logic = new ClueLogic(n);
-        backTracker = new ClueBackTracker(n, hands, logic);
+        backTracker = new ClueBackTracker(n, 5000, hands, logic);
 
     }
     public Clue() {
@@ -46,13 +46,16 @@ public class Clue {
     }
 
     public void update() {
-        boolean changed = false;
-        for(int player = 0; player < n+1; player++) {
-            for(int card = 0; card < 21; card++) {
-                if(testEntry(player, card)) changed = true;
+        backTracker.setStartTime(System.currentTimeMillis());
+        boolean changed = true;
+        while(changed) {
+            changed = false;
+            for (int player = 0; player < n + 1; player++) {
+                for (int card = 0; card < 21; card++) {
+                    if (testEntry(player, card)) changed = true;
+                }
             }
         }
-        if(changed) update();
     }
     private boolean testEntry(int player, int card) {
         if(hands.getTableEntry(player, card) != null) {
@@ -77,6 +80,10 @@ public class Clue {
         primitiveTable.setX(player, card);
     }
 
+
+    public void setTimeLimit(long timeLimit) {
+        backTracker.setTimeLimit(timeLimit);
+    }
 
     public void printTable() {
         System.out.println(hands);
