@@ -55,6 +55,7 @@ public class Clue {
                     if (testEntry(player, card)) changed = true;
                 }
             }
+            if(changed) System.out.println("\n\nI'm a smart lil algorithm! (i just found stuff you wouldn't have)");
         }
     }
     private boolean testEntry(int player, int card) {

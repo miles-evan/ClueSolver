@@ -5,7 +5,7 @@ public class ClueGame {
     private final int n;
     private int turn = 0;
     private int round = 1;
-    private boolean[] out;
+    private final boolean[] out;
 
     public ClueGame(int n, int ... handSizes) {
         this.n = n;
@@ -18,20 +18,24 @@ public class ClueGame {
         out = new boolean[n];
     }
 
+    public void setTimeLimit(long timeLimit) {
+        clue.setTimeLimit(timeLimit);
+    }
+
     private void next() {
         turn = (turn + 1) % n;
         if(turn == 0) round ++;
         if(out[turn]) next();
     }
 
-    public void turn(int weapon, int suspect, int room, int numTries) {
+    private void turn(int weapon, int suspect, int room, int numTries) {
         clue.addInfo(turn, weapon, suspect, room, numTries);
     }
-    public void turn(int weapon, int suspect, int room, int numTries, int cardHandedOver) {
+    private void turn(int weapon, int suspect, int room, int numTries, int cardHandedOver) {
         clue.addInfo(turn, weapon, suspect, room, numTries, cardHandedOver);
     }
 
-    public void accuse(int player, int weapon, int suspect, int room) {
+    private void accuse(int player, int weapon, int suspect, int room) {
         out[player] = true;
         clue.incorrectAccusation(suspect, weapon, room);
     }
@@ -86,12 +90,6 @@ public class ClueGame {
         clue.print();
         System.out.println("(Round " + round + ")");
         System.out.println("It is now player " + turn + "'s turn");
-    }
-
-
-    public static void main(String[] args) {
-        ClueGame clueGame = new ClueGame();
-        clueGame.play();
     }
 
 }
