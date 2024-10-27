@@ -63,7 +63,7 @@ public class ClueBackTracker {
                 completePossible(currentHands, 0, 0, false);
     }
     private boolean completePossible(Hands currentHands, int player, int card, boolean value) {
-        if(System.currentTimeMillis() - startTime > timeLimit) return true;
+        if(timeLimit != -1 && System.currentTimeMillis() - startTime > timeLimit) return true;
 
         if(card == 21) {
             player ++;

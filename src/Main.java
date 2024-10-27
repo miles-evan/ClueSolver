@@ -3,7 +3,7 @@
 public class Main {
     public static void main(String[] args) {
         Clue clue = new Clue();
-        clue.setTimeLimit(15000);
+        clue.setTimeLimit(-1);
         for(int i = 0; i < 15; i++) {
             clue.setX(0, i);
             clue.setX(1, i);
