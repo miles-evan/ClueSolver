@@ -1,3 +1,5 @@
+import java.util.concurrent.atomic.AtomicBoolean;
+
 public class Clue {
 
     private final int n;
@@ -47,15 +49,23 @@ public class Clue {
 
     public void update() {
         backTracker.setStartTime(System.currentTimeMillis());
-        boolean changed = true;
-        while(changed) {
-            changed = false;
-            for (int player = 0; player < n + 1; player++) {
-                for (int card = 0; card < 21; card++) {
-                    if (testEntry(player, card)) changed = true;
-                }
+        AtomicBoolean changed = new AtomicBoolean(true);
+        while(changed.get()) {
+            changed.set(false);
+            Thread[] threads = new Thread[n+1];
+            for(int player = 0; player < n+1; player++) {
+                final int p = player;
+                threads[player] = new Thread(() -> {
+                    for(int card = 0; card < 21; card++) {
+                        if(testEntry(p, card)) changed.set(true);
+                    }
+                });
+                threads[player].start();
             }
-            if(changed) System.out.println("\n\nI'm a smart lil algorithm! (i just found stuff you wouldn't have)");
+            try{
+                for(Thread thread : threads) thread.join();
+            } catch(Exception ignore) {}
+            if(changed.get()) System.out.println("\n\nI'm a smart lil algorithm! (i just found stuff you wouldn't have)");
         }
     }
     private boolean testEntry(int player, int card) {

@@ -2,8 +2,12 @@
 
 public class Main {
     public static void main(String[] args) {
+        play(-1);
+    }
+
+    private static void play(int timeLimit) {
         ClueGame clueGame = new ClueGame();
-        clueGame.setTimeLimit(-1);
+        clueGame.setTimeLimit(timeLimit);
         clueGame.play();
     }
 
