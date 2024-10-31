@@ -25,7 +25,7 @@ public class ClueBackTracker {
         if(!newHands.setValue(player, card, value)) return false;
         return possible(newHands);
     }
-    private boolean possible(Hands currentHands) {
+    public boolean possible(Hands currentHands) {
         return possible(currentHands, new boolean[logic.size()], 0, false) ||
                 possible(currentHands, new boolean[logic.size()], 0, true);
     }
