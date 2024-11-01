@@ -55,17 +55,35 @@ public class ClueLogic {
     }
 
     public void print() {
-        for(int i = 0; i < n; i ++) {
-            System.out.print("Player " + i + ": ");
-            for(int j = 0; j < logic[i].size();) {
-                System.out.print("(" + logic[i].get(j++) + " " + logic[i].get(j++) + " " + logic[i].get(j++) + ") ");
-            }
-            System.out.println();
-        }
-        System.out.print("Accusations: ");
-        for(int i = 0; i < accusationLogic.size(); i += 3) {
-            System.out.print("(" + accusationLogic.get(i++) + " " + accusationLogic.get(i++) + " " + accusationLogic.get(i++) + ") ");
-        }
-        System.out.println();
+        System.out.println(this);
     }
+
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+
+        result.append("-LOGIC-\n");
+        for (int i = 0; i < n; i++) {
+            result.append("Player ").append(i).append(": ");
+            for (int j = 0; j < logic[i].size();) {
+                result.append("(")
+                        .append(logic[i].get(j++)).append(" ")
+                        .append(logic[i].get(j++)).append(" ")
+                        .append(logic[i].get(j++)).append(") ");
+            }
+            result.append("\n");
+        }
+
+        result.append("Accusations: ");
+        for (int i = 0; i < accusationLogic.size(); i += 3) {
+            result.append("(")
+                    .append(accusationLogic.get(i++)).append(" ")
+                    .append(accusationLogic.get(i++)).append(" ")
+                    .append(accusationLogic.get(i++)).append(") ");
+        }
+        result.append("\n");
+
+        return result.toString();
+    }
+
 }

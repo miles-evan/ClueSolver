@@ -151,6 +151,10 @@ public class Hands {
         return result.toString();
     }
 
+    public void print() {
+        System.out.println(this);
+    }
+
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder("\t\t");

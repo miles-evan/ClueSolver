@@ -60,7 +60,6 @@ public class Clue {
                     if (testEntry(player, card)) changed = true;
                 }
             }
-            if (changed) System.out.println("\n\nI'm a smart lil algorithm! (i just found stuff you wouldn't have)");
         } while (backTracker.isTimeLimitExceeded() && changed);
 
     }
@@ -98,16 +97,21 @@ public class Clue {
     }
 
     public void printTable() {
-        System.out.println(hands);
+        hands.print();
     }
     public void print() {
         logic.print();
-        printTable();
+        hands.print();
     }
     public void printPrimitiveTable() {
-        System.out.println(primitiveTable);
+        primitiveTable.print();
     }
     public void printDifference() {
         System.out.println(primitiveTable.difference(hands));
+    }
+
+    @Override
+    public String toString() {
+        return logic.toString() + hands.toString();
     }
 }

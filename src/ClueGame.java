@@ -70,8 +70,7 @@ public class ClueGame {
         print(printPrimitive);
 
         while(in.hasNextLine()) {
-            System.out.println("\n\n\n");
-            System.out.println("suspect weapon room numTries [cardHandedOver]");
+            System.out.println("\nsuspect weapon room numTries [cardHandedOver]");
             input = in.nextLine();
             System.out.println("<" + input + ">\n\n\n\n");
             String[] splitInput = input.split(" ");
