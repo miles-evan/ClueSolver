@@ -8,6 +8,7 @@ public class Clue {
     private final Hands primitiveTable;
     private final ClueLogic logic;
     private final ClueBackTracker backTracker;
+    private boolean valid = true;
 
 
     public Clue(int n, int ... handSizes) {
@@ -76,17 +77,23 @@ public class Clue {
     }
 
 
-    public void setCheck(int player, int card) {
-        hands.setCheck(player, card);
+    public boolean setCheck(int player, int card) {
+        if(!backTracker.possible(player, card, true)) valid = false;
         primitiveTable.setCheck(player, card);
+        return hands.setCheck(player, card);
     }
-    public void setX(int player, int card) {
-        hands.setX(player, card);
+    public boolean setX(int player, int card) {
+        if(!backTracker.possible(player, card, false)) valid = false;
         primitiveTable.setX(player, card);
+        return hands.setX(player, card);
     }
 
     public void setTimeLimit(long timeLimit) {
         backTracker.setTimeLimit(timeLimit);
+    }
+
+    public boolean isValid() {
+        return valid;
     }
 
     public void printTable() {

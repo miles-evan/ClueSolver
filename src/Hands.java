@@ -7,9 +7,9 @@ public class Hands {
     private final int[] numChecks;
     private final int[] numXs;
     private final int[] handSizes;
-    private final int[] numAnswerTypeXs = new int[3];
-    private final int[] numXsInCol = new int[21];
-    private final boolean[] colHasCheck = new boolean[21];
+    private final int[] numAnswerTypeXs;
+    private final int[] numXsInCol;
+    private final boolean[] colHasCheck;
 
     public Hands() {
         this(6, 3, 3, 3, 3, 3, 3);
@@ -22,6 +22,9 @@ public class Hands {
         this.handSizes = new int[n+1];
         System.arraycopy(handSizes, 0, this.handSizes, 0, n);
         this.handSizes[n] = 3;
+        numAnswerTypeXs = new int[3];
+        numXsInCol = new int[21];
+        colHasCheck = new boolean[21];
     }
     public Hands(Hands other) {
         n = other.n;
@@ -32,6 +35,9 @@ public class Hands {
         numChecks = Arrays.copyOf(other.numChecks, other.n+1);
         numXs = Arrays.copyOf(other.numXs, other.n+1);
         handSizes = Arrays.copyOf(other.handSizes, other.n+1);
+        numAnswerTypeXs = Arrays.copyOf(other.numAnswerTypeXs, 3);
+        numXsInCol = Arrays.copyOf(other.numXsInCol, 21);
+        colHasCheck = Arrays.copyOf(other.colHasCheck, 21);
     }
 
     public boolean setValue(int player, int card, boolean value) {
@@ -108,7 +114,7 @@ public class Hands {
 
     private int getType(int card) {
         return card < 6? 0 :
-                card < 12? 1 : 0;
+                card < 12? 1 : 2;
     }
     private int getSizeOfType(int card) {
         return card < 12? 6 : 9;
