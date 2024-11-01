@@ -9,6 +9,7 @@ public class ClueGame {
     private int round = 1;
     private final boolean[] out;
     private Scanner in = new Scanner(System.in);
+    private boolean printPrimitive = false;
 
     public ClueGame(int n, int ... handSizes) {
         this.n = n;
@@ -34,6 +35,9 @@ public class ClueGame {
             in = new Scanner(new File(filename));
         } catch(FileNotFoundException ignore) {}
     }
+    public void setPrintPrimitive(boolean printPrimitive) {
+        this.printPrimitive = printPrimitive;
+    }
 
     private void next() {
         turn = (turn + 1) % n;
@@ -57,16 +61,19 @@ public class ClueGame {
 
     public void play() {
         System.out.println("Player# cardsInHand...");
-        String[] playersCards = in.nextLine().split(" ");
+        String input = in.nextLine();
+        System.out.println("<" + input + ">\n\n\n");
+        String[] playersCards = input.split(" ");
         for(int i = 1; i < playersCards.length; i ++) {
             clue.setCheck(Integer.parseInt(playersCards[0]), Integer.parseInt(playersCards[i]));
         }
-        print(true);
+        print(printPrimitive);
 
         while(in.hasNextLine()) {
             System.out.println("\n\n\n");
             System.out.println("suspect weapon room numTries [cardHandedOver]");
-            String input = in.nextLine();
+            input = in.nextLine();
+            System.out.println("<" + input + ">\n\n\n\n");
             String[] splitInput = input.split(" ");
             if (splitInput.length <= 1) break;
             if(splitInput.length == 3) {
@@ -90,10 +97,10 @@ public class ClueGame {
                 );
             }
             next();
-            print(true);
+            print(printPrimitive);
         }
 
-        clue.printDifference();
+        if(printPrimitive) clue.printDifference();
 
     }
 

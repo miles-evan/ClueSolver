@@ -52,16 +52,17 @@ public class Clue {
 
     public void update() {
         backTracker.setStartTime(System.currentTimeMillis());
-        boolean changed = true;
-        while(changed) {
+        boolean changed;
+        do {
             changed = false;
-            for(int player = 0; player < n+1; player++) {
-                for(int card = 0; card < 21; card++) {
-                    if(testEntry(player, card)) changed = true;
+            for (int player = 0; player < n + 1; player++) {
+                for (int card = 0; card < 21; card++) {
+                    if (testEntry(player, card)) changed = true;
                 }
             }
-            if(changed) System.out.println("\n\nI'm a smart lil algorithm! (i just found stuff you wouldn't have)");
-        }
+            if (changed) System.out.println("\n\nI'm a smart lil algorithm! (i just found stuff you wouldn't have)");
+        } while (backTracker.isTimeLimitExceeded() && changed);
+
     }
     private boolean testEntry(int player, int card) {
         if(hands.getTableEntry(player, card) != null) {

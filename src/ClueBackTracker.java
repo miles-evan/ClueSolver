@@ -4,6 +4,7 @@ public class ClueBackTracker {
     private final ClueLogic logic;
     private long startTime = 0;
     private long timeLimit;
+    private boolean timeLimitExceeded = false;
 
     public ClueBackTracker(int n, long timeLimit, Hands hands, ClueLogic logic) {
         this.n = n;
@@ -17,6 +18,10 @@ public class ClueBackTracker {
     }
     public void setTimeLimit(long timeLimit) {
         this.timeLimit = timeLimit;
+        timeLimitExceeded = false;
+    }
+    public boolean isTimeLimitExceeded() {
+        return timeLimitExceeded;
     }
 
 
@@ -63,7 +68,10 @@ public class ClueBackTracker {
                 completePossible(currentHands, 0, 0, false);
     }
     private boolean completePossible(Hands currentHands, int player, int card, boolean value) {
-        if(timeLimit != -1 && System.currentTimeMillis() - startTime > timeLimit) return true;
+        if(timeLimit != -1 && System.currentTimeMillis() - startTime > timeLimit) {
+            timeLimitExceeded = true;
+            return true;
+        }
 
         if(card == 21) {
             player ++;
