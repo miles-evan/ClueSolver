@@ -1,5 +1,4 @@
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.Scanner;
 
 public class ClueGame {
@@ -7,19 +6,19 @@ public class ClueGame {
     private final int n;
     private int turn = 0;
     private int round = 1;
-    private final boolean[] out;
+    private final boolean[] outPlayers;
     private Scanner in = new Scanner(System.in);
+    private PrintStream out;
     private boolean printPrimitive = false;
 
     public ClueGame(int n, int ... handSizes) {
         this.n = n;
         clue = new Clue(n, handSizes);
-        out = new boolean[n];
+        outPlayers = new boolean[n];
+        setOutputDestination("data/moves.txt");
     }
     public ClueGame() {
-        n = 6;
-        clue = new Clue();
-        out = new boolean[n];
+        this(6, 3, 3, 3, 3, 3, 3);
     }
 
     public void setTimeLimit(long timeLimit) {
@@ -28,13 +27,25 @@ public class ClueGame {
     public void setInputSource(File file) {
         try {
             in = new Scanner(file);
-        } catch(FileNotFoundException ignore) {}
+        } catch(FileNotFoundException ignore) {
+            System.out.println("INPUT FILE NOT FOUND");
+        }
     }
     public void setInputSource(String filename) {
         try {
             in = new Scanner(new File(filename));
-        } catch(FileNotFoundException ignore) {}
+        } catch(FileNotFoundException ignore) {
+            System.out.println("INPUT FILE NOT FOUND");
+        }
     }
+    public void setOutputDestination(String filePath) {
+        try {
+            out = new PrintStream(new FileOutputStream(filePath, false));
+        } catch (IOException ignore) {
+            System.out.println("OUTPUT FILE NOT FOUND");
+        }
+    }
+
     public void setPrintPrimitive(boolean printPrimitive) {
         this.printPrimitive = printPrimitive;
     }
@@ -42,7 +53,7 @@ public class ClueGame {
     private void next() {
         turn = (turn + 1) % n;
         if(turn == 0) round ++;
-        if(out[turn]) next();
+        if(outPlayers[turn]) next();
     }
 
     private void turn(int weapon, int suspect, int room, int numTries) {
@@ -53,7 +64,7 @@ public class ClueGame {
     }
 
     private void accuse(int player, int weapon, int suspect, int room) {
-        out[player] = true;
+        outPlayers[player] = true;
         clue.incorrectAccusation(suspect, weapon, room);
     }
 
@@ -62,6 +73,8 @@ public class ClueGame {
     public void play() {
         System.out.println("Player# cardsInHand...");
         String input = in.nextLine();
+        out.print(input);
+
         System.out.println("<" + input + ">\n\n\n");
         String[] playersCards = input.split(" ");
         for(int i = 1; i < playersCards.length; i ++) {
@@ -72,6 +85,7 @@ public class ClueGame {
         while(in.hasNextLine()) {
             System.out.println("\nsuspect weapon room numTries [cardHandedOver]");
             input = in.nextLine();
+            out.print("\n" + input);
             System.out.println("<" + input + ">\n\n\n\n");
             String[] splitInput = input.split(" ");
             if (splitInput.length <= 1) break;
@@ -106,7 +120,10 @@ public class ClueGame {
 
     public void print(boolean printPrimitive) {
         if(printPrimitive) clue.printPrimitiveTable();
-        clue.print();
+        System.out.println("-LOGIC-");
+        clue.printLogic();
+        System.out.println("-TABLE-");
+        clue.printTable();
         System.out.println("(Round " + round + ")");
         System.out.println("It is now player " + turn + "'s turn");
     }

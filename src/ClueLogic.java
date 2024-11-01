@@ -62,7 +62,6 @@ public class ClueLogic {
     public String toString() {
         StringBuilder result = new StringBuilder();
 
-        result.append("-LOGIC-\n");
         for (int i = 0; i < n; i++) {
             result.append("Player ").append(i).append(": ");
             for (int j = 0; j < logic[i].size();) {

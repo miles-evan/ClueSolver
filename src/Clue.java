@@ -1,6 +1,3 @@
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
-
 public class Clue {
 
     private final int n;
@@ -105,6 +102,9 @@ public class Clue {
     }
     public void printPrimitiveTable() {
         primitiveTable.print();
+    }
+    public void printLogic() {
+        logic.print();
     }
     public void printDifference() {
         System.out.println(primitiveTable.difference(hands));
