@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.HashMap;
 import java.util.Scanner;
 
 /**
@@ -25,12 +26,17 @@ public class ClueGame {
     private PrintStream out;
     /** whether or not to print the primitive table from the clue object */
     private boolean printPrimitive = false;
+    private final HashMap<String, Integer> stringToCard;
 
     public ClueGame(int n, int ... handSizes) {
         this.n = n;
         clue = new Clue(n, handSizes);
         outPlayers = new boolean[n];
         setOutputDestination("data/moves.txt");
+        stringToCard = new HashMap<>() {{put("gr", 0);put("mu", 1);put("or", 2);put("pe", 3);put("pl", 4);put("sc", 5);
+            put("ca", 6);put("da", 7);put("le", 8);put("re", 9);put("ro", 10);put("wr", 11);put("ba", 12);put("bi", 13);
+            put("co", 14);put("di", 15);put("ha", 16);put("ki", 17);put("li", 18);put("lo", 19);put("st", 20);
+        }};
     }
     public ClueGame() {
         this(6, 3, 3, 3, 3, 3, 3);
@@ -88,6 +94,10 @@ public class ClueGame {
         clue.incorrectAccusation(player, suspect, weapon, room);
     }
 
+    private int stringToCard(String str) {
+        return stringToCard.containsKey(str)? stringToCard.get(str) : Integer.parseInt(str);
+    }
+
     /**
      * Runs the game loop, taking input, making moves, and printing the table.
      * First it will prompt you about your player number, and what cards you have.
@@ -108,7 +118,7 @@ public class ClueGame {
         System.out.println("<" + input + ">\n\n\n");
         String[] playersCards = input.split(" ");
         for(int i = 1; i < playersCards.length; i ++) {
-            clue.setCheck(Integer.parseInt(playersCards[0]), Integer.parseInt(playersCards[i]));
+            clue.setCheck(Integer.parseInt(playersCards[0]), stringToCard(playersCards[i]));
         }
         print(printPrimitive);
 
@@ -117,33 +127,16 @@ public class ClueGame {
             System.out.println("\nregularTurn ( suspect weapon room numTries [cardHandedOver] )");
             System.out.println("failedAccusation ( suspect weapon room )");
             input = in.nextLine();
-            if(input.equals("next")) {
-                next(); print(printPrimitive);
-                continue;
-            }
             out.print("\n" + input);
             System.out.println("<" + input + ">\n\n\n\n");
             String[] splitInput = input.split(" ");
             if(input.equals("quit")) break;
             if(splitInput.length == 3) {
-                accuse(turn, Integer.parseInt(splitInput[0]),
-                        Integer.parseInt(splitInput[1]),
-                        Integer.parseInt(splitInput[2]));
+                accuse(turn, stringToCard(splitInput[0]), stringToCard(splitInput[1]), stringToCard(splitInput[2]));
             } else if (splitInput.length == 4) {
-                turn(
-                        Integer.parseInt(splitInput[0]),
-                        Integer.parseInt(splitInput[1]),
-                        Integer.parseInt(splitInput[2]),
-                        Integer.parseInt(splitInput[3])
-                );
+                turn(stringToCard(splitInput[0]), stringToCard(splitInput[1]), stringToCard(splitInput[2]), Integer.parseInt(splitInput[3]));
             } else if (splitInput.length == 5) {
-                turn(
-                        Integer.parseInt(splitInput[0]),
-                        Integer.parseInt(splitInput[1]),
-                        Integer.parseInt(splitInput[2]),
-                        Integer.parseInt(splitInput[3]),
-                        Integer.parseInt(splitInput[4])
-                );
+                turn(stringToCard(splitInput[0]), stringToCard(splitInput[1]), stringToCard(splitInput[2]), Integer.parseInt(splitInput[3]), stringToCard(splitInput[4]));
             }
             next();
             print(printPrimitive);
