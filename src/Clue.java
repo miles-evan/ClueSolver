@@ -76,7 +76,10 @@ public class Clue {
         update();
     }
     /** when a player makes an incorrect accusation */
-    public void incorrectAccusation(int suspect, int weapon, int room) {
+    public void incorrectAccusation(int player, int suspect, int weapon, int room) {
+        setX(player, suspect);
+        setX(player, weapon);
+        setX(player, room);
         logic.addAccusation(suspect, weapon, room);
         update();
     }

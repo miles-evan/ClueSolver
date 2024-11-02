@@ -3,7 +3,11 @@ import java.util.Scanner;
 
 public class Main {
     private static void noArgs() {
-
+        System.out.println("no args");
+        ClueGame clueGame = new ClueGame(4, 5, 5, 4, 4);
+        clueGame.setTimeLimit(-1);
+        clueGame.setInputSource("data/sampleMoves2.txt");
+        clueGame.play();
     }
 
 

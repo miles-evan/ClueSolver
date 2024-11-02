@@ -19,6 +19,8 @@ public class ClueGame {
     private final boolean[] outPlayers;
     /** reads input of player moves */
     private Scanner in = new Scanner(System.in);
+    /** false if reading from a file, true otherwise */
+    private boolean manualInput = true;
     /** writes player moves to a file */
     private PrintStream out;
     /** whether or not to print the primitive table from the clue object */
@@ -40,6 +42,7 @@ public class ClueGame {
     public void setInputSource(File file) {
         try {
             in = new Scanner(file);
+            manualInput = false;
         } catch(FileNotFoundException ignore) {
             System.out.println("INPUT FILE NOT FOUND");
         }
@@ -47,6 +50,7 @@ public class ClueGame {
     public void setInputSource(String filename) {
         try {
             in = new Scanner(new File(filename));
+            manualInput = false;
         } catch(FileNotFoundException ignore) {
             System.out.println("INPUT FILE NOT FOUND");
         }
@@ -81,10 +85,21 @@ public class ClueGame {
     /** when a player makes an incorrect accusation */
     private void accuse(int player, int weapon, int suspect, int room) {
         outPlayers[player] = true;
-        clue.incorrectAccusation(suspect, weapon, room);
+        clue.incorrectAccusation(player, suspect, weapon, room);
     }
 
-    /** runs the game loop, taking input, making moves, and printing the table */
+    /**
+     * Runs the game loop, taking input, making moves, and printing the table.
+     * First it will prompt you about your player number, and what cards you have.
+     * For example, you would say 0 0 1 2 if you are player 0 and have cards 0, 1, and 2.
+     * Then, every turn it will show you the table, and whose turn it is, and it will prompt you about the move they made.
+     * If they make a suggestion, write the 3 cards they suggested, and the number of tries it took for someone to have the card.
+     * For example if 2 people said they didn't have the cards and the third did, put 3. If nobody had them, put -1.
+     * When it's your turn, you know what card they handed over, so add at the end of your input which card they handed over.
+     * For example 0 6 12 3 0 means you suggested 0 6 12, the first two people didn't have it, and the third had card 0.
+     * If someone makes an incorrect accusation, then while it's their turn, just type the 3 cards they accused.
+     * To skip someone's turn, just press enter. If it ever glitches and doesn't work, press delete then enter again.
+     */
     public void play() {
         //find out what cards the user has
         System.out.println("Player# cardsInHand...");
@@ -98,13 +113,18 @@ public class ClueGame {
         print(printPrimitive);
 
         //game loop
-        while(in.hasNextLine()) {
-            System.out.println("\nsuspect weapon room numTries [cardHandedOver]");
+        while(manualInput || in.hasNextLine()) {
+            System.out.println("\nregularTurn ( suspect weapon room numTries [cardHandedOver] )");
+            System.out.println("failedAccusation ( suspect weapon room )");
             input = in.nextLine();
+            if(input.equals("next")) {
+                next(); print(printPrimitive);
+                continue;
+            }
             out.print("\n" + input);
             System.out.println("<" + input + ">\n\n\n\n");
             String[] splitInput = input.split(" ");
-            if (splitInput.length <= 1) break;
+            if(input.equals("quit")) break;
             if(splitInput.length == 3) {
                 accuse(turn, Integer.parseInt(splitInput[0]),
                         Integer.parseInt(splitInput[1]),
@@ -135,7 +155,12 @@ public class ClueGame {
 
 
     public void print(boolean printPrimitive) {
-        if(printPrimitive) clue.printPrimitiveTable();
+        System.out.println("--CLUE INFO--");
+        System.out.println("isValid = " + clue.isValid());
+        if(printPrimitive) {
+            System.out.println("-PRIMITIVE TABLE-");
+            clue.printPrimitiveTable();
+        }
         System.out.println("-LOGIC-");
         clue.printLogic();
         System.out.println("-TABLE-");
