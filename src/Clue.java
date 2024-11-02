@@ -75,14 +75,13 @@ public class Clue {
         setCheck((player + numTries) % n, cardHandedOver);
         update();
     }
-
     /** when a player makes an incorrect accusation */
     public void incorrectAccusation(int suspect, int weapon, int room) {
         logic.addAccusation(suspect, weapon, room);
         update();
     }
 
-
+    /** goes through each table entry and runs testEntry() on it */
     public void update() {
         backTracker.setStartTime(System.currentTimeMillis());
         boolean changed;
@@ -96,6 +95,7 @@ public class Clue {
         } while (backTracker.isTimeLimitExceeded() && changed);
 
     }
+    /** uses the backtracker to see if a table entry must be a check or X based on the info we have */
     private boolean testEntry(int player, int card) {
         if(hands.getTableEntry(player, card) != null) {
             return false;
@@ -145,7 +145,6 @@ public class Clue {
     public void printDifference() {
         System.out.println(primitiveTable.difference(hands));
     }
-
     @Override
     public String toString() {
         return logic.toString() + hands.toString();
