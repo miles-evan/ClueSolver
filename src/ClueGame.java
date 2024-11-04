@@ -27,6 +27,7 @@ public class ClueGame {
     /** whether or not to print the primitive table from the clue object */
     private boolean printPrimitive = false;
     private final HashMap<String, Integer> stringToCard;
+    private int numAssumptions = 0;
 
     public ClueGame(int n, int ... handSizes) {
         this.n = n;
@@ -44,6 +45,9 @@ public class ClueGame {
 
     public void setTimeLimit(long timeLimit) {
         clue.setTimeLimit(timeLimit);
+    }
+    public void setNumAssumptions(int numAssumptions) {
+        this.numAssumptions = numAssumptions;
     }
     public void setInputSource(File file) {
         try {
@@ -81,12 +85,17 @@ public class ClueGame {
         if(outPlayers[turn]) next();
     }
     /** makes a move */
-    private void turn(int weapon, int suspect, int room, int numTries) {
-        clue.addInfo(turn, weapon, suspect, room, numTries);
+    private void turn(int suspect, int weapon, int room, int numTries) {
+        clue.addInfo(turn, suspect, weapon, room, numTries);
+        if(round <= numAssumptions) {
+            clue.setX(turn, suspect);
+            clue.setX(turn, weapon);
+            clue.setX(turn, room);
+        }
     }
     /** makes a move when you know the card handed over */
-    private void turn(int weapon, int suspect, int room, int numTries, int cardHandedOver) {
-        clue.addInfo(turn, weapon, suspect, room, numTries, cardHandedOver);
+    private void turn(int suspect, int weapon, int room, int numTries, int cardHandedOver) {
+        clue.addInfo(turn, suspect, weapon, room, numTries, cardHandedOver);
     }
     /** when a player makes an incorrect accusation */
     private void accuse(int player, int weapon, int suspect, int room) {

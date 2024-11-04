@@ -27,7 +27,7 @@ public class Clue {
         primitiveTable = new Hands(n, handSizes);
         logic = new ClueLogic(n);
         backTracker = new ClueBackTracker(n, 5000, hands, logic);
-
+        hands.setCardsInLogic(logic.getCardsInLogic());
     }
     public Clue() {
         this(6, 3, 3, 3, 3, 3, 3);

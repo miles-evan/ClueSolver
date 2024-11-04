@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 
 /**
  * Handles a clue scorecard table, to figure out the hands of each player
@@ -25,6 +26,11 @@ public class Hands {
     private final boolean[] colHasCheck;
     /** number of cards we know the player has. (the player hand has 3 cards) */
     private final int[] handSizes;
+    /** maps the number of cards to their abbreviations */
+    private final String[] cardToString = new String[]{"gr","mu","or","pe","pl","sc","ca","da","le","re","ro","wr",
+                                                "ba","bi","co","di","ha","ki","li","lo","st"};
+    /** Tells you which card have been added to the logic and which have not */
+    private HashSet<Integer> cardsInLogic = new HashSet<>();
 
     public Hands() {
         this(6, 3, 3, 3, 3, 3, 3);
@@ -184,19 +190,24 @@ public class Hands {
         System.out.println(this);
     }
 
+    public void setCardsInLogic(HashSet<Integer> cardsInLogic) {this.cardsInLogic = cardsInLogic;}
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder("\t\t");
         for(int i = 0; i < 21; i ++) {
-            result.append(i).append("\t");
+            result.append(cardToString[i]).append("\t");
+            if(i == 5 || i == 11) result.append("|\t");
         }
-        result.append("\n     ———————————————————————————————————————————————————————————————————————————————————————\n");
+        result.append("\n     —————————————————————————————————————————————————————————————————————————————————————————————\n");
         for(int i = 0; i < n+1; i ++) {
             result.append(i).append("   |\t");
-            for(Boolean card : table[i]) {
-                result.append(card == null? "." : card? "✔" : "✘").append("\t");
+            for(int j = 0; j < table[i].length; j++) {
+                result.append(table[i][j] == null ?
+                        cardsInLogic.contains(i*21+j) ? "-" : "."
+                        : table[i][j]? "✔" : "✘").append("\t");
+                if(j == 5 || j == 11) result.append("|\t");
             }
-            result.append("\n    | \n");
+            result.append("\n    |\t\t\t\t\t\t\t|\t\t\t\t\t\t\t| \n");
         }
         result.delete(result.length() - 2, result.length());
         return result.toString();

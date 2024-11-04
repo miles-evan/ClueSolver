@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashSet;
 
 /**
  * Holds the logic of when players hand over one of three cards, but you don't know which one,
@@ -25,6 +26,11 @@ public class ClueLogic {
      * the answer has cards (not 0 or not 6 or not 12) and (not 0 or not 6 or not 20)
      */
     private final ArrayList<Integer> accusationLogic;
+    /** maps the number of cards to their abbreviations */
+    private final String[] cardToString = new String[]{"gr","mu","or","pe","pl","sc","ca","da","le","re","ro","wr",
+            "ba","bi","co","di","ha","ki","li","lo","st"};
+    /** Tells you which card have been added to the logic and which have not */
+    private final HashSet<Integer> cardsInLogic = new HashSet<>();
 
     public ClueLogic(int n) {
         this.n = n;
@@ -44,6 +50,9 @@ public class ClueLogic {
         logic[player].add(weapon);
         logic[player].add(room);
         numLogicVars += 3;
+        cardsInLogic.add(player*21+suspect);
+        cardsInLogic.add(player*21+weapon);
+        cardsInLogic.add(player*21+room);
     }
 
     /** when a player makes an accusation but is wrong */
@@ -78,6 +87,7 @@ public class ClueLogic {
             return get(player + 1, index - logic[player].size());
         return new int[] {player, logic[player].get(index)};
     }
+    public HashSet<Integer> getCardsInLogic() {return cardsInLogic;}
 
     public void print() {
         System.out.println(this);
@@ -91,9 +101,9 @@ public class ClueLogic {
             result.append("Player ").append(i).append(": ");
             for (int j = 0; j < logic[i].size();) {
                 result.append("(")
-                        .append(logic[i].get(j++)).append(" ")
-                        .append(logic[i].get(j++)).append(" ")
-                        .append(logic[i].get(j++)).append(") ");
+                        .append(cardToString[logic[i].get(j++)]).append(" ")
+                        .append(cardToString[logic[i].get(j++)]).append(" ")
+                        .append(cardToString[logic[i].get(j++)]).append(") ");
             }
             result.append("\n");
         }
@@ -101,9 +111,9 @@ public class ClueLogic {
         result.append("Accusations: ");
         for (int i = 0; i < accusationLogic.size(); i += 3) {
             result.append("(")
-                    .append(accusationLogic.get(i++)).append(" ")
-                    .append(accusationLogic.get(i++)).append(" ")
-                    .append(accusationLogic.get(i++)).append(") ");
+                    .append(cardToString[accusationLogic.get(i++)]).append(" ")
+                    .append(cardToString[accusationLogic.get(i++)]).append(" ")
+                    .append(cardToString[accusationLogic.get(i++)]).append(") ");
         }
         result.append("\n");
 

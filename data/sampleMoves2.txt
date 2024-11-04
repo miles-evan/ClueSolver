@@ -1,34 +1,22 @@
-0 1 20 6 2 5
-0 7 20 2 7
-
-
-5 11 14 1
-3 8 18 1 18
-1 7 17 1
-1 11 20 2
-1 10 18 1
-
-
-
-
-4 9 13 2 4
-
-5 6 16 1
-0 10 20 1
-3 11 14 1 11
-
-
-2 11 17 1
-0 8 12 2 8
-
-
-3 10 12 2
-
-
-2 11 15 2
-0 10 14 -1
-
-
-
-0 10 14
-2 9 15 3 9
+0 or wr ha
+mu ca ki 2 mu
+gr ca ba 3
+pl ro lo 1
+pl ro co 2
+or re st 2
+or wr st 1
+pe da di 1 di
+sc le bi 1
+pe da ha 1
+pe wr lo 3
+pl ro ki 1
+sc da ki 3
+gr re st 1 st
+mu le li 1
+gr le di 2
+pl le st 1
+pl re ha 2
+mu re st 2
+sc ca li 2 sc
+pe ca ba 2
+pe re bi 2 re
