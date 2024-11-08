@@ -1,3 +1,5 @@
+package clueSolvingAlgorithm;
+
 /**
  * Handles the hands table and logic, and manipulates these based off of game moves.
  * Uses the backtracker to intelligently update the hands based off of the information we know.

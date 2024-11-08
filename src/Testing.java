@@ -1,6 +1,10 @@
+import clueSolvingAlgorithm.Clue;
+
 /**
-    You can ignore this class, this is just for me.
-    I should really turn these into unit tests...
+ * You can ignore this class, this is just for me.
+ * I should really turn these into unit tests...
+ * If you're going to try these out, just know that these are edge cases,
+ * so the run a lot slower than it does it normal games.
  */
 public class Testing {
     public static void main(String[] args) {

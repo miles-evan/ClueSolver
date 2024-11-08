@@ -1,14 +1,16 @@
+package clueSolvingAlgorithm;
+
 import java.io.*;
 import java.util.HashMap;
 import java.util.Scanner;
 
 /**
- * Takes input from user or a file to interact with a Clue object,
+ * Takes input from user or a file to interact with a Clue.Clue object,
  * in order to simulate a game of clue
  * @author Miles Todtfeld
  */
 public class ClueGame {
-    /** instance of Clue to hold and handle clue data and logic */
+    /** instance of Clue.Clue to hold and handle clue data and logic */
     private final Clue clue;
     /** number of players */
     private final int n;

@@ -1,15 +1,12 @@
-import java.io.File;
-import java.util.Scanner;
+import clueSolvingAlgorithm.ClueGame;
+
 /**
- You can ignore this class, this is just for me.
  This is the entry point to the program.
+ You can use this to try out my algorithm.
  */
 public class Main {
     private static void noArgs() {
-        ClueGame clueGame = new ClueGame();
-        clueGame.setTimeLimit(-1);
-        clueGame.setNumAssumptions(0);
-        clueGame.play();
+        play("sampleMoves1.txt");
     }
 
 
@@ -34,4 +31,6 @@ public class Main {
         clueGame.setTimeLimit(timeLimit);
         clueGame.play();
     }
+    private static void play() {play(-1);}
+    private static void play(String filename) {play(filename, -1);}
 }

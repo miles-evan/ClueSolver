@@ -1,3 +1,5 @@
+package clueSolvingAlgorithm;
+
 /**
  * Conducts backtracking to determine if it's possible for a certain player to have (check) or not have (X) some card
  * while satisfying the constraints and information we know
@@ -51,7 +53,7 @@ public class ClueBacktracker {
         if(!newHands.setValue(player, card, value)) return false;
         return possible(newHands);
     }
-    /** takes a Hands that has been altered by one entry, and returns if it's possible
+    /** takes a Clue.Hands that has been altered by one entry, and returns if it's possible
      * to fill in the rest of the table while satisfying constraints we know */
     private boolean possible(Hands currentHands) {
         return possible(currentHands, new boolean[logic.size()], 0, false) ||

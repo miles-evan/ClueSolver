@@ -1,3 +1,5 @@
+package clueSolvingAlgorithm;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 
