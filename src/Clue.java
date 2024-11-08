@@ -15,7 +15,7 @@ public class Clue {
      * and which cards may not be in the answer hand */
     private final ClueLogic logic;
     /** runs the backtracking algorithm to find new information */
-    private final ClueBackTracker backTracker;
+    private final ClueBacktracker backtracker;
     /** if this is false, a check or X was set that is impossible to have set.
      * if that happens in a game, someone probably accidentally lied */
     private boolean valid = true;
@@ -26,7 +26,7 @@ public class Clue {
         hands = new Hands(n, handSizes);
         primitiveTable = new Hands(n, handSizes);
         logic = new ClueLogic(n);
-        backTracker = new ClueBackTracker(n, 5000, hands, logic);
+        backtracker = new ClueBacktracker(n, 5000, hands, logic);
         hands.setCardsInLogic(logic.getCardsInLogic());
     }
     public Clue() {
@@ -86,7 +86,7 @@ public class Clue {
 
     /** goes through each table entry and runs testEntry() on it */
     public void update() {
-        backTracker.setStartTime(System.currentTimeMillis());
+        backtracker.setStartTime(System.currentTimeMillis());
         boolean changed;
         do {
             changed = false;
@@ -96,17 +96,17 @@ public class Clue {
                 }
             }
             if(changed) System.out.println("\nBacktracking algorithm just found new information!\n");
-        } while (backTracker.isTimeLimitExceeded() && changed);
+        } while (backtracker.isTimeLimitExceeded() && changed);
 
     }
     /** uses the backtracker to see if a table entry must be a check or X based on the info we have */
     private boolean testEntry(int player, int card) {
         if(hands.getTableEntry(player, card) != null) {
             return false;
-        } else if(!backTracker.possible(player, card, true)) {
+        } else if(!backtracker.possible(player, card, true)) {
             hands.setX(player, card);
             return true;
-        } else if(!backTracker.possible(player, card, false)) {
+        } else if(!backtracker.possible(player, card, false)) {
             hands.setCheck(player, card);
             return true;
         }
@@ -115,18 +115,18 @@ public class Clue {
 
 
     public boolean setCheck(int player, int card) {
-        if(!backTracker.possible(player, card, true)) valid = false;
+        if(!backtracker.possible(player, card, true)) valid = false;
         primitiveTable.setCheck(player, card);
         return hands.setCheck(player, card);
     }
     public boolean setX(int player, int card) {
-        if(!backTracker.possible(player, card, false)) valid = false;
+        if(!backtracker.possible(player, card, false)) valid = false;
         primitiveTable.setX(player, card);
         return hands.setX(player, card);
     }
 
     public void setTimeLimit(long timeLimit) {
-        backTracker.setTimeLimit(timeLimit);
+        backtracker.setTimeLimit(timeLimit);
     }
 
     public boolean isValid() {

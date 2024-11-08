@@ -1,6 +1,9 @@
 import java.io.File;
 import java.util.Scanner;
-
+/**
+ You can ignore this class, this is just for me.
+ This is the entry point to the program.
+ */
 public class Main {
     private static void noArgs() {
         ClueGame clueGame = new ClueGame();
@@ -10,7 +13,7 @@ public class Main {
     }
 
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         if(args.length == 0) {
             noArgs();
         } else if(args[0].equals("play")) {

@@ -26,7 +26,13 @@ public class ClueGame {
     private PrintStream out;
     /** whether or not to print the primitive table from the clue object */
     private boolean printPrimitive = false;
+    /** maps two letter abbreviations to the corresponding card number.
+     * only works if you're using the same characters, weapons, and rooms as I am. */
     private final HashMap<String, Integer> stringToCard;
+    /** The number of rounds we assume that players are not suggesting cards they have themselves.
+     * If you're playing with normal people, they usually don't suggest cards that they have, so you can set this value higher,
+     * but if you're playing with very smart clue players, set it to 0 or maybe 1.
+     * Using this is risky because you could end up assuming wrong and having wrong information. */
     private int numAssumptions = 0;
 
     public ClueGame(int n, int ... handSizes) {

@@ -3,7 +3,7 @@
  * while satisfying the constraints and information we know
  * @author Miles Todtfeld
  */
-public class ClueBackTracker {
+public class ClueBacktracker {
     /** number of players */
     private final int n;
 
@@ -25,7 +25,7 @@ public class ClueBackTracker {
     /** whether or not the time limit has exceeded. if it has stop doing the "complete" backtracking */
     private boolean timeLimitExceeded = false;
 
-    public ClueBackTracker(int n, long timeLimit, Hands hands, ClueLogic logic) {
+    public ClueBacktracker(int n, long timeLimit, Hands hands, ClueLogic logic) {
         this.n = n;
         this.timeLimit = timeLimit;
         this.hands = hands;
