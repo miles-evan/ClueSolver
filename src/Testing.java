@@ -1,6 +1,6 @@
 public class Testing {
     public static void main(String[] args) {
-
+        completeBacktrackTest();
     }
 
     private static void completeBacktrackTest() {

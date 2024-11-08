@@ -203,7 +203,7 @@ public class Hands {
             result.append(i).append("   |\t");
             for(int j = 0; j < table[i].length; j++) {
                 result.append(table[i][j] == null ?
-                        cardsInLogic.contains(i*21+j) ? "-" : "."
+                        cardsInLogic.contains(i*21+j) ? "_" : "."
                         : table[i][j]? "✔" : "✘").append("\t");
                 if(j == 5 || j == 11) result.append("|\t");
             }

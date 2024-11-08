@@ -34,7 +34,7 @@ public class Clue {
     }
 
     /**
-     * when a player makes a suggestion
+     * when a player makes a suggestion, and we don't know which card was handed over
      * @param player which player made the suggestion
      * @param suspect the suspect card they suggested
      * @param weapon the weapon card they suggested
@@ -56,8 +56,8 @@ public class Clue {
     }
 
     /**
-     * when the user makes a suggestion
-     * @param player which player made the user is
+     * when a player makes a suggestion, and we know which card was handed over
+     * @param player which player made the suggestion
      * @param suspect the suspect card they suggested
      * @param weapon the weapon card they suggested
      * @param room the room card they suggested
@@ -95,6 +95,7 @@ public class Clue {
                     if (testEntry(player, card)) changed = true;
                 }
             }
+            if(changed) System.out.println("\nBacktracking algorithm just found new information!\n");
         } while (backTracker.isTimeLimitExceeded() && changed);
 
     }
