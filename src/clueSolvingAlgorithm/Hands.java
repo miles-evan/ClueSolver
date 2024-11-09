@@ -87,7 +87,7 @@ public class Hands {
         colHasCheck[card] = true;
 
         ArrayList<int[]> scheduledXs = new ArrayList<>();
-        for(int i = 0; i < n+1; i ++) { //put Xs in the column
+        for(int i = 0; i < n+1; i ++) { //put Xs in the column because nobody else can have this card
             if(table[i][card] == null) scheduledXs.add(new int[]{i, card});
         }
         if(player == n) { //if adding a check to the answer hand, put Xs in the rest of that card type
@@ -122,7 +122,7 @@ public class Hands {
         if(player == n) numAnswerTypeXs[getType(card)] ++;
 
         ArrayList<int[]> scheduledChecks = new ArrayList<>();
-        if(player != n && numXsInRow[player] + handSizes[player] == 21) { //if there are enough Xs to where the rest should be checks
+        if(player != n && numXsInRow[player] + handSizes[player] == 21) { //if there are enough Xs in the row to where the rest should be checks
             for(int i = 0; i < 21; i ++) {
                 if(table[player][i] == null) scheduledChecks.add(new int[]{player, i});
             }
@@ -139,7 +139,7 @@ public class Hands {
             }
         }
 
-        for(int[] check : scheduledChecks) { // Check all scheduled entries
+        for(int[] check : scheduledChecks) { // Check mark all scheduled entries
             if(!setCheck(check[0], check[1])) return false;
         }
         return true;
