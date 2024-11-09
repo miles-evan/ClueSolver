@@ -1,9 +1,6 @@
 ---ARCHITECTURE OVERVIEW---
    ---Miles Todtfeld---
 
-The Main class is the entry point to the code. You could write your own, but if you just want to play around with the
-program, you can use that.
-
 The ClueGame class takes user input to simulate a game by communicating with the clueSolvingAlgorithm class.
 The input can refer to cards by their numbers or the first 2 letters.
 
