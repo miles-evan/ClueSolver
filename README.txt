@@ -1,5 +1,17 @@
+---Miles Todtfeld---
+
+This program is designed take in information about what happens in a game of Clue, and determines what cards people have in their hands.
+
+How to run it:
+Run Main class with these command arguments:
+If you want to input the moves of a game yourself: play -1
+If you want to take input moves from a file (sampleMoves1 for example): play data/sampleMoves1.txt -1
+If you want to add a time limit to how long it can run the algorithm for, replace "-1" with the time limit in seconds. For the large majority of cases, this isn't necessary.
+
+
 ---ARCHITECTURE OVERVIEW---
-   ---Miles Todtfeld---
+
+The Main class simply controls the ClueGame class.
 
 The ClueGame class takes user input to simulate a game by communicating with the clueSolvingAlgorithm class.
 The input can refer to cards by their numbers or the first 2 letters.
