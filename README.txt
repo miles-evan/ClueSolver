@@ -2,6 +2,8 @@
 
 This program is designed take in information about what happens in a game of Clue, and determines what cards people have in their hands.
 
+After each turn, the program will output two things. It will output a table of what cards each player definitely does (check) or doesn't (X) have. It will also output the "logic" of what cards each player could have. For example (gr ca ba) means they have green, candlestick, or ballroom. When inputing cards, you could use the first two letters abreviations or the card's number, but it is easier to use the abreviations.
+
 How to run it:
 Run Main class with these command arguments:
 If you want to input the moves of a game yourself: play -1
