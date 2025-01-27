@@ -18,7 +18,7 @@ The Main class simply controls the ClueGame class.
 The ClueGame class takes user input to simulate a game by communicating with the clueSolvingAlgorithm class.
 The input can refer to cards by their numbers or the first 2 letters.
 
-The clueSolvingAlgorithm class holds an instance of Hands and ClueLogic to hold the information we know.
+The Clue class holds an instance of Hands and ClueLogic to hold the information we know.
 Then it takes suggestions made by players and updates the information we know.
 It also holds an instance of ClueBackTracker, and uses it to find out more information based on the information we know.
 
